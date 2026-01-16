@@ -2307,30 +2307,35 @@
             leftWall.rotation.y = -Math.PI/2;
             groups.left.add(leftWall);
             
-            // Base trim - shorten to match wall length
+            // Check if there are open insets (no sidewall in inset area)
+            const leftFrontOpen = params.frontInset > 0 && !params.frontInsetLeftWall;
+            const leftBackOpen = params.backInset > 0 && !params.backInsetLeftWall;
+
+            // Base trim - no extension at open insets
             const leftBaseTrimLen = leftWallLength > 0 ? leftWallLength : 0;
             if (leftBaseTrimLen > 0) {
-                groups.left.add(new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.15, leftBaseTrimLen + 0.1), trimMat.clone()).translateY(0.075).translateX(-W/2 - wallOffset).translateZ(leftWallCenter));
+                groups.left.add(new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.15, leftBaseTrimLen), trimMat.clone()).translateY(0.075).translateX(-W/2 - wallOffset).translateZ(leftWallCenter));
             }
             // Top trim only when no eave overhang (otherwise roof eave trim handles it)
             if (eaveOH === 0 && leftWallLength > 0) {
-                groups.left.add(new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.06, leftWallLength + 0.1), trimMat.clone()).translateY(H + 0.03).translateX(-W/2 - wallOffset).translateZ(leftWallCenter));
+                groups.left.add(new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.06, leftWallLength), trimMat.clone()).translateY(H + 0.03).translateX(-W/2 - wallOffset).translateZ(leftWallCenter));
             }
             // Corner trim - only add at ends where there's no open inset
             // Front corner (Z = L/2) - skip if front inset with left wall open
-            if (!(params.frontInset > 0 && !params.frontInsetLeftWall)) {
+            if (!leftFrontOpen) {
                 groups.left.add(new THREE.Mesh(new THREE.BoxGeometry(0.08, H, 0.08), trimMat.clone()).translateY(H/2).translateX(-W/2 - wallOffset).translateZ(L/2 + wallOffset));
             }
             // Back corner (Z = -L/2) - skip if back inset with left wall open
-            if (!(params.backInset > 0 && !params.backInsetLeftWall)) {
+            if (!leftBackOpen) {
                 groups.left.add(new THREE.Mesh(new THREE.BoxGeometry(0.08, H, 0.08), trimMat.clone()).translateY(H/2).translateX(-W/2 - wallOffset).translateZ(-L/2 - wallOffset));
             }
-            
-            // Add girts only in the enclosed section
+
+            // Add girts only in the enclosed section (no visible end at open insets)
             const girtMat = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.5, metalness: 0.4 });
             const girtHeight1 = H * 0.33;
             const girtHeight2 = H * 0.66;
-            if (leftWallLength > 0) {
+            // Only add girts if wall is fully enclosed (no open insets)
+            if (leftWallLength > 0 && !leftFrontOpen && !leftBackOpen) {
                 groups.left.add(new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.08, leftWallLength), girtMat.clone()).translateY(girtHeight1).translateX(-W/2 - wallOffset + 0.04).translateZ(leftWallCenter));
                 groups.left.add(new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.08, leftWallLength), girtMat.clone()).translateY(girtHeight2).translateX(-W/2 - wallOffset + 0.04).translateZ(leftWallCenter));
             }
@@ -2355,27 +2360,31 @@
             rightWall.rotation.y = Math.PI/2;
             groups.right.add(rightWall);
             
-            // Base trim - shorten to match wall length
+            // Check if there are open insets (no sidewall in inset area)
+            const rightFrontOpen = params.frontInset > 0 && !params.frontInsetRightWall;
+            const rightBackOpen = params.backInset > 0 && !params.backInsetRightWall;
+
+            // Base trim - no extension at open insets
             const rightBaseTrimLen = rightWallLength > 0 ? rightWallLength : 0;
             if (rightBaseTrimLen > 0) {
-                groups.right.add(new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.15, rightBaseTrimLen + 0.1), trimMat.clone()).translateY(0.075).translateX(W/2 + wallOffset).translateZ(rightWallCenter));
+                groups.right.add(new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.15, rightBaseTrimLen), trimMat.clone()).translateY(0.075).translateX(W/2 + wallOffset).translateZ(rightWallCenter));
             }
             // Top trim only when no eave overhang
             if (eaveOH === 0 && rightWallLength > 0) {
-                groups.right.add(new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.06, rightWallLength + 0.1), trimMat.clone()).translateY(H + 0.03).translateX(W/2 + wallOffset).translateZ(rightWallCenter));
+                groups.right.add(new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.06, rightWallLength), trimMat.clone()).translateY(H + 0.03).translateX(W/2 + wallOffset).translateZ(rightWallCenter));
             }
             // Corner trim - only add at ends where there's no open inset
             // Front corner (Z = L/2) - skip if front inset with right wall open
-            if (!(params.frontInset > 0 && !params.frontInsetRightWall)) {
+            if (!rightFrontOpen) {
                 groups.right.add(new THREE.Mesh(new THREE.BoxGeometry(0.08, H, 0.08), trimMat.clone()).translateY(H/2).translateX(W/2 + wallOffset).translateZ(L/2 + wallOffset));
             }
             // Back corner (Z = -L/2) - skip if back inset with right wall open
-            if (!(params.backInset > 0 && !params.backInsetRightWall)) {
+            if (!rightBackOpen) {
                 groups.right.add(new THREE.Mesh(new THREE.BoxGeometry(0.08, H, 0.08), trimMat.clone()).translateY(H/2).translateX(W/2 + wallOffset).translateZ(-L/2 - wallOffset));
             }
-            
-            // Add girts only in the enclosed section
-            if (rightWallLength > 0) {
+
+            // Add girts only in the enclosed section (no visible end at open insets)
+            if (rightWallLength > 0 && !rightFrontOpen && !rightBackOpen) {
                 groups.right.add(new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.08, rightWallLength), girtMat.clone()).translateY(girtHeight1).translateX(W/2 + wallOffset - 0.04).translateZ(rightWallCenter));
                 groups.right.add(new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.08, rightWallLength), girtMat.clone()).translateY(girtHeight2).translateX(W/2 + wallOffset - 0.04).translateZ(rightWallCenter));
             }
