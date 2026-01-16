@@ -2425,7 +2425,7 @@
                 insetSidewallTex.repeat.set(insetSidewallLen * 2, 1);
                 insetSidewallTex.rotation = Math.PI / 2;
                 insetSidewallTex.center.set(0.5, 0.5);
-                
+
                 // Left inset sidewall (only if enabled)
                 if (params.frontInsetLeftWall) {
                     const leftInsetWall = new THREE.Mesh(
@@ -2437,7 +2437,7 @@
                     groups.front.add(leftInsetWall);
                     // No trim on inset sidewalls
                 }
-                
+
                 // Right inset sidewall (only if enabled)
                 if (params.frontInsetRightWall) {
                     const rightInsetTex = createPanelTexture(colors.wall);
@@ -2453,16 +2453,16 @@
                     groups.front.add(rightInsetWall);
                     // No trim on inset sidewalls
                 }
-                
-                // Add columns at the front edge (where the roof extends to)
+
+                // Add columns at the front edge (where the roof extends to) - added to roof group so they stay visible
                 const colMat = new THREE.MeshStandardMaterial({ color: colors.trim, roughness: 0.4, metalness: 0.5 });
                 const leftCol = new THREE.Mesh(new THREE.BoxGeometry(0.2, H, 0.2), colMat.clone());
                 leftCol.position.set(-W/2, H/2, L/2);
-                groups.front.add(leftCol);
-                
+                groups.roof.add(leftCol);
+
                 const rightCol = new THREE.Mesh(new THREE.BoxGeometry(0.2, H, 0.2), colMat.clone());
                 rightCol.position.set(W/2, H/2, L/2);
-                groups.front.add(rightCol);
+                groups.roof.add(rightCol);
             }
             scene.add(groups.front);
             groups.front.visible = params.showFront;
@@ -2539,15 +2539,15 @@
                     // No trim on inset sidewalls
                 }
                 
-                // Add columns at the back edge (where the roof extends to)
+                // Add columns at the back edge (where the roof extends to) - added to roof group so they stay visible
                 const colMat = new THREE.MeshStandardMaterial({ color: colors.trim, roughness: 0.4, metalness: 0.5 });
                 const leftCol = new THREE.Mesh(new THREE.BoxGeometry(0.2, H, 0.2), colMat.clone());
                 leftCol.position.set(-W/2, H/2, -L/2);
-                groups.back.add(leftCol);
-                
+                groups.roof.add(leftCol);
+
                 const rightCol = new THREE.Mesh(new THREE.BoxGeometry(0.2, H, 0.2), colMat.clone());
                 rightCol.position.set(W/2, H/2, -L/2);
-                groups.back.add(rightCol);
+                groups.roof.add(rightCol);
             }
             scene.add(groups.back);
             groups.back.visible = params.showBack;
