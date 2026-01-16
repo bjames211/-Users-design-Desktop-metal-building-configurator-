@@ -2463,12 +2463,6 @@
                 const rightCol = new THREE.Mesh(new THREE.BoxGeometry(0.2, H, 0.2), colMat.clone());
                 rightCol.position.set(W/2, H/2, L/2);
                 groups.front.add(rightCol);
-                
-                // Header beam at the front edge
-                const headerMat = new THREE.MeshStandardMaterial({ color: colors.trim, roughness: 0.4, metalness: 0.5 });
-                const header = new THREE.Mesh(new THREE.BoxGeometry(W, 0.25, 0.2), headerMat);
-                header.position.set(0, H, L/2);
-                groups.front.add(header);
             }
             scene.add(groups.front);
             groups.front.visible = params.showFront;
@@ -2554,12 +2548,6 @@
                 const rightCol = new THREE.Mesh(new THREE.BoxGeometry(0.2, H, 0.2), colMat.clone());
                 rightCol.position.set(W/2, H/2, -L/2);
                 groups.back.add(rightCol);
-                
-                // Header beam at the back edge
-                const headerMat = new THREE.MeshStandardMaterial({ color: colors.trim, roughness: 0.4, metalness: 0.5 });
-                const header = new THREE.Mesh(new THREE.BoxGeometry(W, 0.25, 0.2), headerMat);
-                header.position.set(0, H, -L/2);
-                groups.back.add(header);
             }
             scene.add(groups.back);
             groups.back.visible = params.showBack;
